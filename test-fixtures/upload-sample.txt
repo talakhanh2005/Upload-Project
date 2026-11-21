@@ -1,0 +1,2 @@
+ClassDrop upload verification fixture.
+This file contains no personal, project-confidential, or credential data.

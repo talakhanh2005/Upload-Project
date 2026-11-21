@@ -1,0 +1,3 @@
+import { IsBoolean, IsDateString, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+export class CreateAssignmentDto { @IsString() @MinLength(2) @MaxLength(160) title: string; @IsOptional() @IsString() @MaxLength(10000) instructions?: string; @IsDateString() deadlineAt: string; @IsOptional() @IsDateString() opensAt?: string; @IsOptional() @IsDateString() closesAt?: string; }
+export class UpdateAssignmentDto { @IsOptional() @IsString() @MinLength(2) @MaxLength(160) title?: string; @IsOptional() @IsString() @MaxLength(10000) instructions?: string; @IsOptional() @IsDateString() deadlineAt?: string; @IsOptional() @IsBoolean() isManuallyLocked?: boolean; }

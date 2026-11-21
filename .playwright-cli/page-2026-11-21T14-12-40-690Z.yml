@@ -1,0 +1,28 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e3]:
+      - link "F Folio" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: F
+        - text: Folio
+      - link "Student portal ↗" [ref=e6] [cursor=pointer]:
+        - /url: /
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - paragraph [ref=e9]: Teacher workspace
+        - heading "Build the class. Keep work moving." [level=1] [ref=e10]: Build the class.Keep work moving.
+        - paragraph [ref=e11]: Create student profiles first, gather them into courses, then publish assignments and review every submission.
+      - generic [ref=e12]:
+        - generic [ref=e13]: T
+        - paragraph [ref=e14]: Secure access
+        - heading "Teacher sign in" [level=2] [ref=e15]
+        - generic [ref=e16]:
+          - text: Email
+          - textbox "Email" [ref=e17]: teacher@example.com
+        - generic [ref=e18]:
+          - text: Password
+          - textbox "Password" [ref=e19]
+        - button "Enter workspace →" [ref=e20] [cursor=pointer]:
+          - text: Enter workspace
+          - generic [ref=e21]: →
+  - button "Open Next.js Dev Tools" [ref=e27] [cursor=pointer]

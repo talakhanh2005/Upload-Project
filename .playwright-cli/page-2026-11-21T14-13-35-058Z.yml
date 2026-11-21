@@ -1,0 +1,71 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - complementary [ref=e32]:
+      - link "F Folio" [ref=e33] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e34]: F
+        - text: Folio
+      - generic [ref=e35]:
+        - paragraph [ref=e36]: Workspace
+        - button "⌂ Overview" [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]: ⌂
+          - text: Overview
+        - button "◎ Students 1" [ref=e39] [cursor=pointer]:
+          - generic [ref=e40]: ◎
+          - text: Students
+          - generic [ref=e41]: "1"
+        - paragraph [ref=e42]: Courses
+        - button "L Lớp Tiếng Anh 1-1" [active] [ref=e43] [cursor=pointer]:
+          - generic [ref=e44]: L
+          - text: Lớp Tiếng Anh 1-1
+      - generic [ref=e45]:
+        - generic [ref=e46]: D
+        - generic [ref=e47]:
+          - strong [ref=e48]: Demo Teacher
+          - generic [ref=e49]: Teacher
+        - button "↗" [ref=e50] [cursor=pointer]
+    - generic [ref=e7]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]: Teacher portal
+          - generic [ref=e54]: /
+          - strong [ref=e55]: Lớp Tiếng Anh 1-1
+        - button "＋ New course" [ref=e56] [cursor=pointer]
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - paragraph [ref=e94]: 163D7C84
+            - heading "Lớp Tiếng Anh 1-1" [level=1] [ref=e95]
+            - paragraph [ref=e96]: Lớp tiếng anh giáo tiếp cho học sinh tiểu học
+          - generic [ref=e97]:
+            - generic [ref=e98]: ACTIVE
+            - button "Edit course" [ref=e99] [cursor=pointer]
+            - button "End course" [ref=e100] [cursor=pointer]
+            - button "Delete" [ref=e101] [cursor=pointer]
+        - generic [ref=e102]:
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e105]:
+                - paragraph [ref=e106]: Assignments
+                - heading "Course work" [level=2] [ref=e107]
+              - button "＋ New" [ref=e108] [cursor=pointer]
+            - button "01 BTVN 21/11 Due 22 Nov 2026, 17:00 Review →" [ref=e110] [cursor=pointer]:
+              - generic [ref=e111]: "01"
+              - generic [ref=e112]:
+                - strong [ref=e113]: BTVN 21/11
+                - generic [ref=e114]: Due 22 Nov 2026, 17:00
+              - generic [ref=e115]: Review →
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - generic [ref=e118]:
+                - paragraph [ref=e119]: Roster
+                - heading "1 students" [level=2] [ref=e120]
+              - button "＋ New student" [ref=e121] [cursor=pointer]
+            - generic [ref=e123]:
+              - generic [ref=e124]: T
+              - generic [ref=e125]:
+                - strong [ref=e126]: Trần Tùng Tiệm
+                - code [ref=e127]: STU002
+              - button "Remove Trần Tùng Tiệm from course" [ref=e128] [cursor=pointer]: Remove
+  - button "Open Next.js Dev Tools" [ref=e27] [cursor=pointer]
+  - alert [ref=e31]
