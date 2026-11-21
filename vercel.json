@@ -7,7 +7,8 @@
       "framework": "nextjs"
     },
     "api": {
-      "root": "apps/api"
+      "root": "apps/api",
+      "framework": "nestjs"
     }
   },
   "rewrites": [
