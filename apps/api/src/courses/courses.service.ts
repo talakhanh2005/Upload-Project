@@ -6,11 +6,11 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { randomBytes } from "node:crypto";
 import { Model, Types } from "mongoose";
-import { CourseStatus, JwtPrincipal, Role } from "../common/domain";
-import { User, UserDocument } from "../users/user.schema";
-import { Course, CourseDocument } from "./course.schema";
-import { CreateCourseDto, UpdateCourseDto } from "./courses.dto";
-import { Enrollment, EnrollmentDocument } from "./enrollment.schema";
+import { CourseStatus, Role, type JwtPrincipal } from "../common/domain.js";
+import { User, type UserDocument } from "../users/user.schema.js";
+import { Course, type CourseDocument } from "./course.schema.js";
+import { CreateCourseDto, UpdateCourseDto } from "./courses.dto.js";
+import { Enrollment, type EnrollmentDocument } from "./enrollment.schema.js";
 
 @Injectable()
 export class CoursesService {

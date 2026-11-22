@@ -4,7 +4,7 @@ import { google, drive_v3 } from 'googleapis';
 import { createReadStream } from 'node:fs';
 import { unlink } from 'node:fs/promises';
 import { Readable } from 'node:stream';
-import { OpenedFile, StorageAdapter, StorageContext, StoredFile } from './storage.types';
+import type { OpenedFile, StorageAdapter, StorageContext, StoredFile } from './storage.types.js';
 
 @Injectable()
 export class GoogleDriveAdapter implements StorageAdapter {
@@ -28,7 +28,10 @@ export class GoogleDriveAdapter implements StorageAdapter {
   }
 
   private safeFolderName(value: string) {
-    return value.replace(/[\\/\u0000-\u001f]/g, '_').trim().slice(0, 120) || 'Untitled';
+    return Array.from(value, (character) => {
+      const code = character.charCodeAt(0);
+      return character === '\\' || character === '/' || code <= 31 ? '_' : character;
+    }).join('').trim().slice(0, 120) || 'Untitled';
   }
 
   private async ensureFolder(name: string, parentId: string) {

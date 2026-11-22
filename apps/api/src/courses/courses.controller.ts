@@ -8,14 +8,11 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { JwtAuthGuard, Roles, RolesGuard } from "../auth/guards";
-import { CurrentUser } from "../auth/current-user";
-import { JwtPrincipal, Role } from "../common/domain";
-import { CoursesService } from "./courses.service";
-import { CreateCourseDto, EnrollDto, UpdateCourseDto } from "./courses.dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-@ApiTags("teacher-courses")
-@ApiBearerAuth()
+import { JwtAuthGuard, Roles, RolesGuard } from "../auth/guards.js";
+import { CurrentUser } from "../auth/current-user.js";
+import { Role, type JwtPrincipal } from "../common/domain.js";
+import { CoursesService } from "./courses.service.js";
+import { CreateCourseDto, EnrollDto, UpdateCourseDto } from "./courses.dto.js";
 @Controller("courses")
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CoursesController {

@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
-import { GoogleDriveAdapter } from './google-drive.adapter';
-import { LocalStorageAdapter } from './local-storage.adapter';
-import { StorageService } from './storage.service';
+import { GoogleDriveAdapter } from './google-drive.adapter.js';
+import { LocalStorageAdapter } from './local-storage.adapter.js';
+import { StorageService } from './storage.service.js';
 
 @Global()
 @Module({

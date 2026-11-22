@@ -14,8 +14,8 @@ jest.mock("../storage/storage.service", () => ({
 }));
 
 import { Types } from "mongoose";
-import { Role } from "../common/domain";
-import { StudentsService } from "./students.service";
+import { Role } from "../common/domain.js";
+import { StudentsService } from "./students.service.js";
 
 describe("StudentsService", () => {
   it("creates one enrollment for every selected course", async () => {

@@ -10,9 +10,9 @@ jest.mock("@nestjs/mongoose", () => ({
   SchemaFactory: { createForClass: () => ({ index: jest.fn() }) },
 }));
 
-import { CourseStatus, Role } from "../common/domain";
-import { UpdateCourseDto } from "./courses.dto";
-import { CoursesService } from "./courses.service";
+import { CourseStatus, Role } from "../common/domain.js";
+import { UpdateCourseDto } from "./courses.dto.js";
+import { CoursesService } from "./courses.service.js";
 
 describe("CoursesService", () => {
   it("updates status without erasing optional course fields", async () => {

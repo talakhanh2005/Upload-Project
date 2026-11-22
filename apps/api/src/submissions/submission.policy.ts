@@ -1,4 +1,4 @@
-import { CourseStatus } from '../common/domain';
+import { CourseStatus } from '../common/domain.js';
 
 export type UploadLike = { size: number; mimetype: string };
 export type AssignmentWindow = {

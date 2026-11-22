@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, SetMetadata, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
-import { JwtPrincipal, Role } from '../common/domain';
+import { Role, type JwtPrincipal } from '../common/domain.js';
 export const Roles = (...roles: Role[]) => SetMetadata('roles', roles);
 @Injectable() export class JwtAuthGuard extends AuthGuard('jwt') {}
 @Injectable()

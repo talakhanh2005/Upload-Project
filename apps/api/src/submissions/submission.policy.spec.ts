@@ -1,5 +1,5 @@
-import { CourseStatus } from '../common/domain';
-import { validateSubmission } from './submission.policy';
+import { CourseStatus } from '../common/domain.js';
+import { validateSubmission } from './submission.policy.js';
 
 const limits = { isManuallyLocked: false, maxFileCount: 25, maxFileBytes: 25 * 1024 * 1024, maxTotalBytes: 100 * 1024 * 1024 };
 const pdf = (size: number) => ({ size, mimetype: 'application/pdf' });

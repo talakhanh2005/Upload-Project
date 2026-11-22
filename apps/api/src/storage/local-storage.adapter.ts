@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createReadStream } from 'node:fs';
 import { unlink } from 'node:fs/promises';
-import { OpenedFile, StorageAdapter, StorageContext, StoredFile } from './storage.types';
+import type { OpenedFile, StorageAdapter, StorageContext, StoredFile } from './storage.types.js';
 
 @Injectable()
 export class LocalStorageAdapter implements StorageAdapter {

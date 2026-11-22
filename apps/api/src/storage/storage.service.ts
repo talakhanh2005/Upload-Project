@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GoogleDriveAdapter } from './google-drive.adapter';
-import { LocalStorageAdapter } from './local-storage.adapter';
-import { StorageAdapter, StorageContext } from './storage.types';
+import { GoogleDriveAdapter } from './google-drive.adapter.js';
+import { LocalStorageAdapter } from './local-storage.adapter.js';
+import type { StorageAdapter, StorageContext } from './storage.types.js';
 
 @Injectable()
 export class StorageService {

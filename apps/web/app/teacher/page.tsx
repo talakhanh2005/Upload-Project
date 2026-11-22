@@ -1,8 +1,9 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
-const api = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+const api = process.env.NEXT_PUBLIC_API_URL ?? "/api";
 type TeacherSession = {
   token: string;
   user: { id: string; name: string; role: string };
@@ -177,13 +178,19 @@ export default function TeacherPage() {
   useEffect(() => {
     const saved = sessionStorage.getItem("teacherSession");
     if (!saved) return;
+    let timer: number | undefined;
     try {
       const active = JSON.parse(saved) as TeacherSession;
-      setSession(active);
-      void loadWorkspace(active);
+      timer = window.setTimeout(() => {
+        setSession(active);
+        void loadWorkspace(active);
+      }, 0);
     } catch {
       sessionStorage.removeItem("teacherSession");
     }
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, [loadWorkspace]);
 
   async function login(event: FormEvent) {
@@ -632,12 +639,12 @@ export default function TeacherPage() {
     return (
       <main className="teacher-login-page">
         <nav className="public-nav">
-          <a className="brand" href="/">
+          <Link className="brand" href="/">
             <span>F</span>Folio
-          </a>
-          <a className="teacher-link" href="/">
+          </Link>
+          <Link className="teacher-link" href="/">
             Student portal <b>↗</b>
-          </a>
+          </Link>
         </nav>
         <section>
           <div className="login-note">
@@ -687,9 +694,9 @@ export default function TeacherPage() {
   return (
     <main className="teacher-app">
       <aside className="teacher-sidebar">
-        <a className="brand inverse" href="/">
+        <Link className="brand inverse" href="/">
           <span>F</span>Folio
-        </a>
+        </Link>
         <div className="sidebar-nav">
           <p>Workspace</p>
           <button
@@ -1014,7 +1021,7 @@ export default function TeacherPage() {
                                 <span>{file.filename}</span>
                                 <small>
                                   {downloadingFile ===
-                                  `${row.submission._id}:${index}`
+                                  `${row.submission!._id}:${index}`
                                     ? "Downloading…"
                                     : `${formatFileSize(file.sizeBytes)} · Download`}
                                 </small>

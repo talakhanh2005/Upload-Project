@@ -1,18 +1,15 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { randomUUID } from 'node:crypto';
+import { mkdirSync } from 'node:fs';
 import { extname } from 'node:path';
 import type { Response } from 'express';
 import { diskStorage } from 'multer';
-import { CurrentUser } from '../auth/current-user';
-import { JwtAuthGuard, Roles, RolesGuard } from '../auth/guards';
-import { JwtPrincipal, Role } from '../common/domain';
-import { FeedbackDto } from './submissions.dto';
-import { SubmissionsService } from './submissions.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-
-@ApiTags('submissions')
-@ApiBearerAuth()
+import { CurrentUser } from '../auth/current-user.js';
+import { JwtAuthGuard, Roles, RolesGuard } from '../auth/guards.js';
+import { Role, type JwtPrincipal } from '../common/domain.js';
+import { FeedbackDto } from './submissions.dto.js';
+import { SubmissionsService } from './submissions.service.js';
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class SubmissionsController {
@@ -22,7 +19,11 @@ export class SubmissionsController {
   @Roles(Role.STUDENT)
   @UseInterceptors(FilesInterceptor('files', 25, {
     storage: diskStorage({
-      destination: process.env.LOCAL_STORAGE_ROOT ?? './uploads',
+      destination: (_request, _file, callback) => {
+        const uploadRoot = process.env.LOCAL_STORAGE_ROOT ?? '/tmp/uploads';
+        mkdirSync(uploadRoot, { recursive: true });
+        callback(null, uploadRoot);
+      },
       filename: (_request, file, callback) => callback(null, `${randomUUID()}${extname(file.originalname).toLowerCase()}`),
     }),
     limits: { fileSize: 26_214_400, files: 25 },

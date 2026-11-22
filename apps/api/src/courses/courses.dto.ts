@@ -8,7 +8,7 @@ import {
   MaxLength,
   MinLength,
 } from "class-validator";
-import { CourseStatus } from "../common/domain";
+import { CourseStatus } from "../common/domain.js";
 export class CreateCourseDto {
   @IsString() @MinLength(2) @MaxLength(120) name: string;
   @IsOptional() @IsString() @MaxLength(2000) description?: string;

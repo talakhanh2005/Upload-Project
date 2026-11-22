@@ -7,16 +7,16 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
-import { JwtPrincipal, Role } from "../common/domain";
-import { Course, CourseDocument } from "../courses/course.schema";
-import { Enrollment, EnrollmentDocument } from "../courses/enrollment.schema";
-import { StorageService } from "../storage/storage.service";
+import { Role, type JwtPrincipal } from "../common/domain.js";
+import { Course, type CourseDocument } from "../courses/course.schema.js";
+import { Enrollment, type EnrollmentDocument } from "../courses/enrollment.schema.js";
+import { StorageService } from "../storage/storage.service.js";
 import {
   Submission,
-  SubmissionDocument,
-} from "../submissions/submission.schema";
-import { User, UserDocument } from "../users/user.schema";
-import { CreateStudentDto } from "./students.dto";
+  type SubmissionDocument,
+} from "../submissions/submission.schema.js";
+import { User, type UserDocument } from "../users/user.schema.js";
+import { CreateStudentDto } from "./students.dto.js";
 
 @Injectable()
 export class StudentsService {

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule } from '../auth/auth.module';
-import { Assignment, AssignmentSchema } from '../assignments/assignment.schema';
-import { Course, CourseSchema } from '../courses/course.schema';
-import { Enrollment, EnrollmentSchema } from '../courses/enrollment.schema';
-import { User, UserSchema } from '../users/user.schema';
-import { Submission, SubmissionSchema } from './submission.schema';
-import { SubmissionsController } from './submissions.controller';
-import { SubmissionsService } from './submissions.service';
+import { AuthModule } from '../auth/auth.module.js';
+import { Assignment, AssignmentSchema } from '../assignments/assignment.schema.js';
+import { Course, CourseSchema } from '../courses/course.schema.js';
+import { Enrollment, EnrollmentSchema } from '../courses/enrollment.schema.js';
+import { User, UserSchema } from '../users/user.schema.js';
+import { Submission, SubmissionSchema } from './submission.schema.js';
+import { SubmissionsController } from './submissions.controller.js';
+import { SubmissionsService } from './submissions.service.js';
 
 @Module({
   imports: [

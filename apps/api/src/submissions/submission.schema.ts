@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as MongoSchema, Types } from "mongoose";
-import { FeedbackStatus, ScanStatus } from "../common/domain";
+import { FeedbackStatus, ScanStatus } from "../common/domain.js";
 @Schema({ _id: false })
 export class SubmissionFile {
   @Prop({ required: true }) storageKey: string;

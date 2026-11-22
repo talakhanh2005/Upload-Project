@@ -2,14 +2,14 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { unlink } from 'node:fs/promises';
-import { Assignment, AssignmentDocument } from '../assignments/assignment.schema';
-import { FeedbackStatus, JwtPrincipal, Role, ScanStatus } from '../common/domain';
-import { Course, CourseDocument } from '../courses/course.schema';
-import { Enrollment, EnrollmentDocument } from '../courses/enrollment.schema';
-import { StorageService } from '../storage/storage.service';
-import { User, UserDocument } from '../users/user.schema';
-import { validateSubmission } from './submission.policy';
-import { Submission, SubmissionDocument } from './submission.schema';
+import { Assignment, type AssignmentDocument } from '../assignments/assignment.schema.js';
+import { FeedbackStatus, Role, ScanStatus, type JwtPrincipal } from '../common/domain.js';
+import { Course, type CourseDocument } from '../courses/course.schema.js';
+import { Enrollment, type EnrollmentDocument } from '../courses/enrollment.schema.js';
+import { StorageService } from '../storage/storage.service.js';
+import { User, type UserDocument } from '../users/user.schema.js';
+import { validateSubmission } from './submission.policy.js';
+import { Submission, type SubmissionDocument } from './submission.schema.js';
 
 @Injectable()
 export class SubmissionsService {

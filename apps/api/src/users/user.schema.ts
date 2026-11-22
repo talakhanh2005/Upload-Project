@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as MongoSchema, Types } from "mongoose";
-import { Role } from "../common/domain";
+import { Role } from "../common/domain.js";
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, trim: true }) name: string;

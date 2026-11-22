@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as MongoSchema, Types } from "mongoose";
-import { CourseStatus } from "../common/domain";
+import { CourseStatus } from "../common/domain.js";
 @Schema({ timestamps: true })
 export class Course {
   @Prop({ required: true, unique: true, index: true }) code: string;

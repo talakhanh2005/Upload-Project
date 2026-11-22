@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule } from './auth/auth.module';
-import { CoursesModule } from './courses/courses.module';
-import { AssignmentsModule } from './assignments/assignments.module';
-import { SubmissionsModule } from './submissions/submissions.module';
-import { HealthController } from './health.controller';
-import { StorageModule } from './storage/storage.module';
-import { StudentsModule } from './students/students.module';
+import { AuthModule } from './auth/auth.module.js';
+import { CoursesModule } from './courses/courses.module.js';
+import { AssignmentsModule } from './assignments/assignments.module.js';
+import { SubmissionsModule } from './submissions/submissions.module.js';
+import { HealthController } from './health.controller.js';
+import { StorageModule } from './storage/storage.module.js';
+import { StudentsModule } from './students/students.module.js';
 
 @Module({
   imports: [
