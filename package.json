@@ -29,5 +29,5 @@
     "@nestjs/jwt": { "@nestjs/common": "12.3.2" },
     "@nestjs/passport": { "@nestjs/common": "12.3.2" }
   },
-  "engines": { "node": ">=22" }
+  "engines": { "node": "22.x" }
 }
