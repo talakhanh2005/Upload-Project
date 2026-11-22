@@ -1,4 +1,4 @@
-import { Readable } from 'node:stream';
+import { Readable } from "node:stream";
 
 export type StoredFile = {
   storageKey: string;
@@ -11,6 +11,7 @@ export type StorageContext = {
   courseName: string;
   assignmentName: string;
   studentName: string;
+  teacherEmail?: string;
 };
 
 export type OpenedFile = {
@@ -19,7 +20,10 @@ export type OpenedFile = {
 };
 
 export interface StorageAdapter {
-  store(file: Express.Multer.File, context: StorageContext): Promise<StoredFile>;
+  store(
+    file: Express.Multer.File,
+    context: StorageContext,
+  ): Promise<StoredFile>;
   remove(storageKey: string): Promise<void>;
   open(storageKey: string, mime: string): Promise<OpenedFile>;
   health(): Promise<{ driver: string; connected: boolean; detail?: string }>;
