@@ -37,6 +37,9 @@ The implemented route contract, authorization rules, and example payloads are do
 - Upload count, per-file, total-size, MIME allowlist, course-state, open/close, and lock enforcement.
 - MongoDB indexes for unique student codes, enrollments, courses, and current submissions.
 - Responsive student entry and teacher login pages, Swagger docs, seed data, Docker development services, and policy tests.
+- Interactive exercise MVP foundation: versioned teacher drafts, strict MD/TXT import preview, five question types, publish validation, student autosave with optimistic revision checks, frozen shuffle order, deterministic grading, private voice recording storage, and teacher result publication APIs.
+
+Teachers can create an assignment with type **Interactive exercise** and open its question builder from the course page. Students open a published exercise from the normal assignment list. The import grammar and example payload are documented in `docs/api.md`.
 
 ## Required before deployment
 

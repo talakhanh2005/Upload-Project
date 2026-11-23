@@ -12,6 +12,7 @@ import {
   type AssignmentDocument,
 } from "../assignments/assignment.schema.js";
 import {
+  AssignmentKind,
   FeedbackStatus,
   Role,
   ScanStatus,
@@ -52,6 +53,10 @@ export class SubmissionsService {
     if (user.role !== Role.STUDENT || !user.studentId)
       throw new ForbiddenException();
     const assignment = await this.assignment(id);
+    if (assignment.kind === AssignmentKind.INTERACTIVE) {
+      await Promise.allSettled(files.map((file) => unlink(file.path)));
+      throw new BadRequestException("Use the interactive exercise player for this assignment");
+    }
     if (
       !(await this.enrollments.exists({
         courseId: assignment.courseId,

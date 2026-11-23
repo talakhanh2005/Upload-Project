@@ -9,7 +9,7 @@ import { Assignment, type AssignmentDocument } from "./assignment.schema.js";
 import { Course, type CourseDocument } from "../courses/course.schema.js";
 import { Enrollment, type EnrollmentDocument } from "../courses/enrollment.schema.js";
 import { CreateAssignmentDto, UpdateAssignmentDto } from "./assignments.dto.js";
-import { CourseStatus, Role, type JwtPrincipal } from "../common/domain.js";
+import { AssignmentKind, CourseStatus, EditorStatus, Role, type JwtPrincipal } from "../common/domain.js";
 @Injectable()
 export class AssignmentsService {
   constructor(
@@ -47,8 +47,12 @@ export class AssignmentsService {
     const c = await this.assertCourse(courseId, user, true);
     if (c.status === CourseStatus.ENDED)
       throw new ForbiddenException("Course has ended");
+    if (dto.kind === AssignmentKind.MIXED)
+      throw new ForbiddenException("Mixed assignments are reserved for a future release");
     return this.assignments.create({
       ...dto,
+      kind: dto.kind ?? AssignmentKind.FILE_UPLOAD,
+      editorStatus: dto.kind === AssignmentKind.INTERACTIVE ? EditorStatus.DRAFT : undefined,
       courseId: new Types.ObjectId(courseId),
       createdBy: new Types.ObjectId(user.sub),
     });

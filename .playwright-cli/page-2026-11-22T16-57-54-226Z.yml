@@ -1,0 +1,42 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e3]:
+      - link "F Folio" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: F
+        - text: Folio
+      - link "Teacher portal ↗" [ref=e6] [cursor=pointer]:
+        - /url: /teacher
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: F
+        - paragraph [ref=e10]: Student submission portal
+        - heading "One ID. Every class." [level=1] [ref=e11]: One ID.Every class.
+        - paragraph [ref=e12]: Enter the student ID your teacher gave you. Then choose a course, open an assignment, and upload your work.
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - generic [ref=e15]: "01"
+            - text: Enter your ID
+          - generic [ref=e16]:
+            - generic [ref=e17]: "02"
+            - text: Pick a course
+          - generic [ref=e18]:
+            - generic [ref=e19]: "03"
+            - text: Submit work
+      - generic [ref=e20]:
+        - generic [ref=e21]: "01"
+        - paragraph [ref=e22]: Welcome back
+        - heading "Find your workspace" [level=2] [ref=e23]
+        - paragraph [ref=e24]: Your ID is unique to you and may contain letters or numbers.
+        - generic [ref=e25]:
+          - text: Student ID
+          - textbox "Student ID" [active] [ref=e26]:
+            - /placeholder: e.g. STU-2048
+        - button "Continue →" [ref=e27] [cursor=pointer]:
+          - text: Continue
+          - generic [ref=e28]: →
+        - generic [ref=e29]: Can’t find your ID? Ask your teacher to check your student profile.
+    - generic [ref=e30]:
+      - generic [ref=e31]: Folio
+      - generic [ref=e32]: Private by design · Built for classrooms
+  - alert [ref=e33]

@@ -9,6 +9,7 @@ import { HealthController } from "./health.controller.js";
 import { StorageModule } from "./storage/storage.module.js";
 import { StudentsModule } from "./students/students.module.js";
 import { TeachersModule } from "./teachers/teachers.module.js";
+import { ExercisesModule } from "./exercises/exercises.module.js";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TeachersModule } from "./teachers/teachers.module.js";
     SubmissionsModule,
     StudentsModule,
     TeachersModule,
+    ExercisesModule,
   ],
   controllers: [HealthController],
 })

@@ -1,3 +1,4 @@
-import { IsBoolean, IsDateString, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-export class CreateAssignmentDto { @IsString() @MinLength(2) @MaxLength(160) title: string; @IsOptional() @IsString() @MaxLength(10000) instructions?: string; @IsDateString() deadlineAt: string; @IsOptional() @IsDateString() opensAt?: string; @IsOptional() @IsDateString() closesAt?: string; }
+import { IsBoolean, IsDateString, IsEnum, IsInt, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { AssignmentKind } from '../common/domain.js';
+export class CreateAssignmentDto { @IsString() @MinLength(2) @MaxLength(160) title: string; @IsOptional() @IsString() @MaxLength(10000) instructions?: string; @IsDateString() deadlineAt: string; @IsOptional() @IsDateString() opensAt?: string; @IsOptional() @IsDateString() closesAt?: string; @IsOptional() @IsEnum(AssignmentKind) kind?: AssignmentKind; @IsOptional() @IsInt() @Min(1) @Max(10) maxAttempts?: number; }
 export class UpdateAssignmentDto { @IsOptional() @IsString() @MinLength(2) @MaxLength(160) title?: string; @IsOptional() @IsString() @MaxLength(10000) instructions?: string; @IsOptional() @IsDateString() deadlineAt?: string; @IsOptional() @IsBoolean() isManuallyLocked?: boolean; }

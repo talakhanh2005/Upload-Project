@@ -142,3 +142,45 @@ The active driver is selected with `STORAGE_DRIVER=local` or `STORAGE_DRIVER=goo
 For Google Workspace deployments, set `GOOGLE_DRIVE_AUTH_MODE=workspace-delegation` and configure the service-account and Workspace domain variables. The service account impersonates the owning teacher when it creates files, so a Workspace super admin performs one domain-wide authorization instead of every teacher configuring OAuth credentials. Teachers outside the managed domain still require a user-consent OAuth flow.
 
 Interactive OpenAPI documentation is available at `http://localhost:4000/docs`.
+
+## Interactive Exercises
+
+Interactive assignments are separate from file submissions. Existing assignments default to `FILE_UPLOAD`; create a new one with `"kind": "INTERACTIVE"` to use the exercise workflow. `MIXED` is reserved and rejected in this release.
+
+### Teacher authoring
+
+| Method | Route | Definition |
+| ------ | ----- | ---------- |
+| GET/POST | `/assignments/:id/exercise/draft` | Get or create the next editable version. |
+| PUT | `/assignments/:id/exercise/draft` | Save `sections`, `questions`, and `expectedRevision`. |
+| POST | `/assignments/:id/exercise/validate` | Validate all five question schemas without publishing. |
+| POST | `/assignments/:id/exercise/publish` | Publish an immutable version and make it active. |
+| POST | `/courses/:courseId/exercises/import/preview` | Parse strict MD/TXT source without committing it. |
+| POST | `/courses/:courseId/exercises/import/commit` | Atomically create/update a draft from valid import source. |
+| POST | `/courses/:courseId/exercise-assets` | Multipart image upload using field `file`. |
+
+Import accepts optional YAML-style front matter followed by fenced `exercise` blocks containing strict JSON. It is limited to 1 MiB and 100 questions. Imports always remain drafts; unresolved `imageKey` values must be replaced with uploaded `imageAssetId` values before publish.
+
+### Student attempts
+
+| Method | Route | Definition |
+| ------ | ----- | ---------- |
+| GET | `/assignments/:id/exercise` | Read the sanitized published version; answer keys are omitted. |
+| POST | `/assignments/:id/exercise/attempts` | Start or resume an in-progress attempt. |
+| GET | `/exercise-attempts/:id` | Resume answers and frozen presentation order. |
+| PATCH | `/exercise-attempts/:id/answers` | Autosave the full answer set with `expectedRevision`. |
+| POST | `/exercise-attempts/:id/audio` | Multipart voice upload with `file`, `questionId`, and `durationSeconds`. |
+| POST | `/exercise-attempts/:id/submit` | Idempotent submit and server-side grading. |
+| GET | `/exercise-attempts/:id/result` | Read published results only. |
+| GET | `/exercise-assets/:id/content` | Authorized private image/audio stream. |
+
+`MULTIPLE_CHOICE`, `FILL_BLANK`, `IMAGE_MATCH`, and `SENTENCE_ORDER` are graded deterministically. `READ_ALOUD` changes the attempt to `NEEDS_REVIEW`; recordings accept supported browser audio MIME types, 3–120 seconds, and at most 15 MiB.
+
+### Teacher review
+
+| Method | Route | Definition |
+| ------ | ----- | ---------- |
+| GET | `/assignments/:id/exercise/attempts` | List attempts for an owned assignment. |
+| GET | `/exercise-attempts/:id/review` | Read the attempt and server-only version for grading. |
+| PUT | `/exercise-attempts/:id/grading` | Set manual points and mark the result ready. |
+| POST | `/exercise-attempts/:id/feedback/publish` | Publish the result for the student. |

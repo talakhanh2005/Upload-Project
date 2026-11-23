@@ -1,0 +1,26 @@
+- generic [active] [ref=f3e1]:
+  - main [ref=f3e2]:
+    - navigation [ref=f3e3]:
+      - link "F Folio" [ref=f3e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f3e5]: F
+        - text: Folio
+      - link "Teacher portal ↗" [ref=f3e6] [cursor=pointer]:
+        - /url: /teacher
+    - generic [ref=f3e7]:
+      - generic [ref=f3e8]:
+        - paragraph [ref=f3e9]: System administration
+        - heading "People first. Access controlled." [level=1] [ref=f3e10]: People first.Access controlled.
+        - paragraph [ref=f3e11]: Create teacher accounts, control access, and see how each account connects to Google Drive.
+      - generic [ref=f3e12]:
+        - generic [ref=f3e13]: A
+        - paragraph [ref=f3e14]: Restricted access
+        - heading "Administrator sign in" [level=2] [ref=f3e15]
+        - generic [ref=f3e16]:
+          - text: Email
+          - textbox "Email" [ref=f3e17]: admin@example.com
+        - generic [ref=f3e18]:
+          - text: Password
+          - textbox "Password" [ref=f3e19]
+        - button "Open admin →" [ref=f3e20] [cursor=pointer]
+  - alert [ref=f3e21]

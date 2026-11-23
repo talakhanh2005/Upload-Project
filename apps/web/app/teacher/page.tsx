@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const api = process.env.NEXT_PUBLIC_API_URL ?? "/api";
 type TeacherSession = {
@@ -36,6 +37,8 @@ type Assignment = {
   instructions?: string;
   deadlineAt: string;
   isManuallyLocked: boolean;
+  kind: "FILE_UPLOAD" | "INTERACTIVE";
+  editorStatus?: "DRAFT" | "PUBLISHED";
 };
 type Submission = {
   _id: string;
@@ -67,6 +70,7 @@ function formatFileSize(bytes: number) {
 }
 
 export default function TeacherPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("teacher@example.com");
   const [password, setPassword] = useState("");
   const [session, setSession] = useState<TeacherSession | null>(null);
@@ -102,6 +106,7 @@ export default function TeacherPage() {
     title: "",
     instructions: "",
     deadlineAt: "",
+    kind: "FILE_UPLOAD" as "FILE_UPLOAD" | "INTERACTIVE",
   });
   const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [passwordForm, setPasswordForm] = useState({
@@ -412,8 +417,10 @@ export default function TeacherPage() {
         },
       )) as Assignment;
       setAssignments((current) => [...current, created]);
-      setAssignmentForm({ title: "", instructions: "", deadlineAt: "" });
+      const openBuilder = assignmentForm.kind === "INTERACTIVE";
+      setAssignmentForm({ title: "", instructions: "", deadlineAt: "", kind: "FILE_UPLOAD" });
       setShowAssignmentForm(false);
+      if (openBuilder) router.push(`/teacher/exercises/${created._id}`);
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : "Could not create assignment.",
@@ -1088,6 +1095,14 @@ export default function TeacherPage() {
                         }
                         required
                       />
+                      <select
+                        aria-label="Assignment type"
+                        value={assignmentForm.kind}
+                        onChange={(event) => setAssignmentForm({ ...assignmentForm, kind: event.target.value as "FILE_UPLOAD" | "INTERACTIVE" })}
+                      >
+                        <option value="FILE_UPLOAD">File upload</option>
+                        <option value="INTERACTIVE">Interactive exercise</option>
+                      </select>
                       <input
                         type="datetime-local"
                         value={assignmentForm.deadlineAt}
@@ -1109,21 +1124,33 @@ export default function TeacherPage() {
                           })
                         }
                       />
-                      <button>Create assignment</button>
+                      {assignmentForm.kind === "INTERACTIVE" && (
+                        <div className="interactive-create-note">
+                          <strong>Question builder opens after this step</strong>
+                          <p>The assignment needs a title and deadline first. You will then choose and arrange:</p>
+                          <div>
+                            <span>Multiple choice</span>
+                            <span>Fill blank</span>
+                            <span>Image match</span>
+                            <span>Sentence order</span>
+                            <span>Read aloud</span>
+                          </div>
+                        </div>
+                      )}
+                      <button>{assignmentForm.kind === "INTERACTIVE" ? "Create & open question builder →" : "Create assignment"}</button>
                     </form>
                   )}
                   <div className="assignment-admin-list">
                     {assignments.map((item, index) => (
-                      <button
-                        key={item._id}
-                        onClick={() => void openReview(item)}
-                      >
+                      item.kind === "INTERACTIVE" ? <Link className="assignment-admin-link" key={item._id} href={`/teacher/exercises/${item._id}`}>
                         <span>{String(index + 1).padStart(2, "0")}</span>
                         <div>
                           <strong>{item.title}</strong>
-                          <small>Due {formatDate(item.deadlineAt)}</small>
+                          <small>{item.editorStatus ?? "DRAFT"} · Due {formatDate(item.deadlineAt)}</small>
                         </div>
-                        <b>Review →</b>
+                        <b>Edit →</b>
+                      </Link> : <button key={item._id} onClick={() => void openReview(item)}>
+                        <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>Due {formatDate(item.deadlineAt)}</small></div><b>Review →</b>
                       </button>
                     ))}
                     {!assignments.length && (
