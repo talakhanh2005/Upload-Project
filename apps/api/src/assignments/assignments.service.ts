@@ -64,4 +64,13 @@ export class AssignmentsService {
     Object.assign(a, dto);
     return a.save();
   }
+  async remove(id: string, user: JwtPrincipal) {
+    const assignment = await this.assignments.findById(id);
+    if (!assignment || assignment.deleted) throw new NotFoundException("Assignment not found");
+    await this.assertCourse(assignment.courseId.toString(), user, true);
+    assignment.deleted = true;
+    assignment.isManuallyLocked = true;
+    await assignment.save();
+    return { id: assignment.id, deleted: true };
+  }
 }

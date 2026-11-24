@@ -4,8 +4,5 @@
   "buildCommand": "npm run build --workspace @upload/web",
   "outputDirectory": "apps/web/.next",
   "framework": "nextjs",
-  "installCommand": "npm ci",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://upload-project-38cr.onrender.com/api"
-  }
+  "installCommand": "npm ci"
 }

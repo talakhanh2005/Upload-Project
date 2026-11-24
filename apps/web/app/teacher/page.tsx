@@ -427,6 +427,17 @@ export default function TeacherPage() {
       );
     }
   }
+  async function deleteAssignment(item: Assignment) {
+    if (!session || !window.confirm(`Delete “${item.title}”? The assignment will disappear for students, while existing history remains stored.`)) return;
+    try {
+      await request(`/assignments/${item._id}`, session.token, { method: "DELETE" });
+      setAssignments((current) => current.filter((assignment) => assignment._id !== item._id));
+      if (reviewing?._id === item._id) setReviewing(null);
+      setSuccessMessage(`Deleted “${item.title}”.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not delete assignment.");
+    }
+  }
   async function openReview(item: Assignment) {
     if (!session) return;
     setReviewing(item);
@@ -1141,18 +1152,14 @@ export default function TeacherPage() {
                     </form>
                   )}
                   <div className="assignment-admin-list">
-                    {assignments.map((item, index) => (
-                      item.kind === "INTERACTIVE" ? <Link className="assignment-admin-link" key={item._id} href={`/teacher/exercises/${item._id}`}>
-                        <span>{String(index + 1).padStart(2, "0")}</span>
-                        <div>
-                          <strong>{item.title}</strong>
-                          <small>{item.editorStatus ?? "DRAFT"} · Due {formatDate(item.deadlineAt)}</small>
-                        </div>
-                        <b>Edit →</b>
-                      </Link> : <button key={item._id} onClick={() => void openReview(item)}>
+                    {assignments.map((item, index) => <article className="assignment-admin-row" key={item._id}>
+                      {item.kind === "INTERACTIVE" ? <Link className="assignment-admin-link" href={`/teacher/exercises/${item._id}`}>
+                        <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>{item.editorStatus ?? "DRAFT"} · Due {formatDate(item.deadlineAt)}</small></div><b>Edit →</b>
+                      </Link> : <button className="assignment-admin-open" onClick={() => void openReview(item)}>
                         <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>Due {formatDate(item.deadlineAt)}</small></div><b>Review →</b>
-                      </button>
-                    ))}
+                      </button>}
+                      <button className="assignment-delete" aria-label={`Delete ${item.title}`} title="Delete assignment" onClick={() => void deleteAssignment(item)}>×</button>
+                    </article>)}
                     {!assignments.length && (
                       <p className="muted">No assignments yet.</p>
                     )}

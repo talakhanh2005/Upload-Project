@@ -73,7 +73,8 @@ export class ExercisesService {
 
   async getDraft(id: string, user: JwtPrincipal) {
     const { assignment } = await this.teacherAssignment(id, user);
-    return this.draftFor(assignment, user);
+    const draft = await this.draftFor(assignment, user);
+    return this.editorPayload(draft, assignment);
   }
   async updateDraft(id: string, dto: UpdateExerciseDraftDto, user: JwtPrincipal) {
     const { assignment } = await this.teacherAssignment(id, user);
@@ -82,11 +83,15 @@ export class ExercisesService {
     draft.sections = dto.sections as ExerciseSection[];
     draft.questions = dto.questions as ExerciseQuestion[];
     draft.revision += 1;
-    return draft.save();
+    await draft.save();
+    return this.editorPayload(draft, assignment);
   }
   async validate(id: string, user: JwtPrincipal) {
     const draft = await this.getDraft(id, user);
     return validateExercise(draft.sections, draft.questions);
+  }
+  private editorPayload(draft: ExerciseVersionDocument, assignment: AssignmentDocument) {
+    return { ...draft.toObject(), _id: draft.id, courseId: assignment.courseId.toString(), assignmentTitle: assignment.title };
   }
   async publish(id: string, user: JwtPrincipal) {
     const { assignment } = await this.teacherAssignment(id, user);
@@ -224,7 +229,7 @@ export class ExercisesService {
     const mime = file.mimetype.split(";", 1)[0].toLowerCase();
     if (!allowed.has(mime) || file.size > 15 * 1024 * 1024 || !await hasExpectedSignature(file.path, mime)) { await unlink(file.path).catch(() => undefined); throw new BadRequestException("Use a valid JPEG, PNG or WebP image up to 15 MB"); }
     file.mimetype = mime;
-    const stored = await this.storage.store(file, { courseName: course.name, assignmentName: "ExerciseAssets", studentName: "Teacher", teacherEmail: undefined });
+    const stored = await this.storage.storeImage(file, { courseName: course.name, assignmentName: "ExerciseAssets", studentName: "Teacher", teacherEmail: undefined });
     try { return await this.assets.create({ courseId: course._id, ownerId: asId(user.sub), kind: "IMAGE", ...stored, scanStatus: "CLEAN" }); }
     catch (error) { await this.storage.remove(stored.storageKey); throw error; }
   }
