@@ -91,6 +91,7 @@ Response includes `id`, `name`, optional `email`, and the generated `studentCode
 | GET    | `/courses/:courseId/assignments` | Owning Teacher/Admin or scoped Student | Lists non-deleted assignments ordered by deadline.               |
 | POST   | `/courses/:courseId/assignments` | Owning Teacher/Admin                   | Creates an assignment. Creation is rejected for an ended course. |
 | PATCH  | `/assignments/:assignmentId`     | Owning Teacher/Admin                   | Updates title, instructions, deadline, or manual lock state.     |
+| DELETE | `/assignments/:assignmentId`     | Owning Teacher/Admin                   | Soft-deletes and locks an assignment; existing submission history is retained. |
 
 Create assignment:
 

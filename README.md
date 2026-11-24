@@ -15,6 +15,17 @@ Web: http://localhost:3000 · API docs: http://localhost:4000/docs
 Demo teacher: `teacher@example.com` / `ChangeMe123!`  
 Demo student code: printed by the seed command.
 
+## Environments and releases
+
+- `main` is production. A merge into `main` triggers the production Vercel deployment.
+- `dev` is integration/preview. Push feature work here and use its stable Vercel preview URL for acceptance testing.
+- Local development uses `apps/web/.env.local` with `NEXT_PUBLIC_API_URL=http://localhost:4000/api`.
+- Vercel owns the Preview and Production value of `NEXT_PUBLIC_API_URL`; do not put a deployed API URL in `vercel.json`.
+
+Normal release flow: create a feature branch from `dev`, open a pull request into `dev`, verify the Preview deployment, then open a pull request from `dev` into `main` to release.
+
+Interactive-exercise images use Cloudinary whenever `CLOUDINARY_URL` is configured. Local development falls back to `STORAGE_DRIVER`. Add `CLOUDINARY_URL` as a secret in the deployed API environment; it must never use the `NEXT_PUBLIC_` prefix or be committed.
+
 ## MVP defaults chosen from unresolved analysis items
 
 - Total upload size is `<= 100 MB`.
