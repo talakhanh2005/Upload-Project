@@ -813,6 +813,24 @@ button {
 .teacher-login-page .access-card {
   color: var(--ink);
 }
+.api-environment {
+  width: fit-content;
+  margin: -8px 0 18px;
+  border: 1px solid #b8d8cc;
+  border-radius: 999px;
+  background: #edf8f3;
+  padding: 6px 10px;
+  color: var(--aqua-dark);
+  font: 700 9px DM Mono, monospace;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.sidebar-environment {
+  margin: 18px 0 8px;
+  border-color: rgba(149, 224, 198, .28);
+  background: rgba(68, 184, 144, .12);
+  color: #9de0c8;
+}
 /* Teacher app */
 .teacher-app {
   min-height: 100vh;

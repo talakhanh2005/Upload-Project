@@ -5,6 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const api = process.env.NEXT_PUBLIC_API_URL ?? "/api";
+const apiEnvironment = api.includes("localhost")
+  ? "Local API"
+  : api.includes("onrender.com")
+    ? "Production API · Render"
+    : "Configured API";
 type TeacherSession = {
   token: string;
   user: { id: string; name: string; role: string };
@@ -681,6 +686,7 @@ export default function TeacherPage() {
             <div className="card-number">T</div>
             <p className="kicker">Secure access</p>
             <h2>Teacher sign in</h2>
+            <p className="api-environment">● {apiEnvironment}</p>
             <label>
               Email
               <input
@@ -715,6 +721,7 @@ export default function TeacherPage() {
         <Link className="brand inverse" href="/">
           <span>F</span>Folio
         </Link>
+        <p className="api-environment sidebar-environment">● {apiEnvironment}</p>
         <div className="sidebar-nav">
           <p>Workspace</p>
           <button
