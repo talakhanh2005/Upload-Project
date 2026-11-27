@@ -1,9 +1,9 @@
 import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { v2 as cloudinary } from "cloudinary";
 import { unlink } from "node:fs/promises";
 import { Readable } from "node:stream";
 import type { ReadableStream as NodeReadableStream } from "node:stream/web";
+import { cloudinary, configureCloudinary } from "./cloudinary-client.js";
 import type {
   OpenedFile,
   StorageAdapter,
@@ -16,10 +16,20 @@ const PREFIX = "cloudinary:image:";
 @Injectable()
 export class CloudinaryStorageAdapter implements StorageAdapter {
   readonly configured: boolean;
+  private readonly folderRoot: string;
 
   constructor(config: ConfigService) {
-    this.configured = Boolean(config.get<string>("CLOUDINARY_URL"));
-    cloudinary.config({ secure: true });
+    this.configured = configureCloudinary(
+      config.get<string>("CLOUDINARY_URL"),
+    );
+    const defaultEnvironment =
+      config.get<string>("NODE_ENV") === "production"
+        ? "production"
+        : "development";
+    this.folderRoot = this.safePath(
+      config.get<string>("CLOUDINARY_FOLDER") ??
+        `upload-system/${defaultEnvironment}`,
+    );
   }
 
   private assertConfigured() {
@@ -38,7 +48,7 @@ export class CloudinaryStorageAdapter implements StorageAdapter {
     try {
       const uploaded = await cloudinary.uploader.upload(file.path, {
         resource_type: "image",
-        folder: `upload-system/exercises/${this.safeSegment(context.courseName)}`,
+        folder: `${this.folderRoot}/exercises/${this.safeSegment(context.courseName)}`,
         use_filename: true,
         unique_filename: true,
         overwrite: false,
@@ -82,11 +92,37 @@ export class CloudinaryStorageAdapter implements StorageAdapter {
   }
 
   async health() {
-    return {
-      driver: "cloudinary",
-      connected: this.configured,
-      detail: this.configured ? undefined : "CLOUDINARY_URL is missing",
-    };
+    if (!this.configured) {
+      return {
+        driver: "cloudinary",
+        connected: false,
+        detail: "CLOUDINARY_URL is missing or invalid",
+      };
+    }
+
+    try {
+      await cloudinary.api.ping();
+      return {
+        driver: "cloudinary",
+        connected: true,
+        detail: `folder=${this.folderRoot}`,
+      };
+    } catch {
+      return {
+        driver: "cloudinary",
+        connected: false,
+        detail: "Cloudinary credentials could not be verified",
+      };
+    }
+  }
+
+  private safePath(value: string) {
+    const path = value
+      .split("/")
+      .map((segment) => this.safeSegment(segment))
+      .filter(Boolean)
+      .join("/");
+    return path || "upload-system/development";
   }
 
   private safeSegment(value: string) {

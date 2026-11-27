@@ -24,7 +24,11 @@ Demo student code: printed by the seed command.
 
 Normal release flow: create a feature branch from `dev`, open a pull request into `dev`, verify the Preview deployment, then open a pull request from `dev` into `main` to release.
 
-Interactive-exercise images use Cloudinary whenever `CLOUDINARY_URL` is configured. Local development falls back to `STORAGE_DRIVER`. Add `CLOUDINARY_URL` as a secret in the deployed API environment; it must never use the `NEXT_PUBLIC_` prefix or be committed.
+Interactive-exercise images use Cloudinary whenever `CLOUDINARY_URL` is configured. Local development falls back to `STORAGE_DRIVER`. Add `CLOUDINARY_URL` as a secret only in the deployed API environment; it must never use the `NEXT_PUBLIC_` prefix or be committed.
+
+Use `CLOUDINARY_FOLDER` to isolate assets by environment. Recommended values are `upload-system/dev` for local/preview and `upload-system/production` for production. Set this explicitly on Render because preview and production services commonly both run with `NODE_ENV=production`. The Vercel frontend does not need `CLOUDINARY_URL` or any Cloudinary secret.
+
+Verify the dev credentials with `npm run cloudinary:test --workspace @upload/api`. The smoke test refuses to run in a `production` folder, uploads and reads back a tiny image, then deletes it.
 
 ## MVP defaults chosen from unresolved analysis items
 

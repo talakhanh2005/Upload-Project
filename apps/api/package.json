@@ -10,7 +10,8 @@
     "lint": "eslint \"src/**/*.ts\"",
     "seed": "nest build && node dist/seed.js",
     "migrate:object-ids": "nest build && node dist/migrations/fix-object-id-fields.js",
-    "google:auth": "tsx src/scripts/google-auth.ts"
+    "google:auth": "tsx src/scripts/google-auth.ts",
+    "cloudinary:test": "tsx src/scripts/cloudinary-smoke-test.ts"
   },
   "dependencies": {
     "@nestjs/common": "^12.3.2",
