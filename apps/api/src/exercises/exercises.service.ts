@@ -8,6 +8,7 @@ import { Assignment, type AssignmentDocument } from "../assignments/assignment.s
 import { AssignmentKind, CourseStatus, EditorStatus, ExerciseAttemptStatus, ExerciseGradingStatus, ExerciseQuestionType, Role, type JwtPrincipal } from "../common/domain.js";
 import { Course, type CourseDocument } from "../courses/course.schema.js";
 import { Enrollment, type EnrollmentDocument } from "../courses/enrollment.schema.js";
+import { User, type UserDocument } from "../users/user.schema.js";
 import { ExerciseAttempt, type ExerciseAttemptDocument } from "./exercise-attempt.schema.js";
 import { ExerciseAsset, type ExerciseAssetDocument } from "./exercise-asset.schema.js";
 import { gradeExercise } from "./exercise.grading.js";
@@ -23,6 +24,7 @@ const asId = (id: string) => {
   return new Types.ObjectId(id);
 };
 const object = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === "object" && !Array.isArray(value);
+type TeacherAttemptListResponse = { assignment: { id: string; title: string; deadlineAt: Date }; students: Array<{ id: string; name: string; studentCode?: string }>; attempts: unknown[] };
 
 @Injectable()
 export class ExercisesService {
@@ -30,6 +32,7 @@ export class ExercisesService {
     @InjectModel(Assignment.name) private assignments: Model<AssignmentDocument>,
     @InjectModel(Course.name) private courses: Model<CourseDocument>,
     @InjectModel(Enrollment.name) private enrollments: Model<EnrollmentDocument>,
+    @InjectModel(User.name) private users: Model<UserDocument>,
     @InjectModel(ExerciseVersion.name) private versions: Model<ExerciseVersionDocument>,
     @InjectModel(ExerciseAttempt.name) private attempts: Model<ExerciseAttemptDocument>,
     @InjectModel(ExerciseAsset.name) private assets: Model<ExerciseAssetDocument>,
@@ -213,9 +216,39 @@ export class ExercisesService {
     return { id: attempt.id, status: attempt.status, gradingStatus: attempt.gradingStatus, autoPoints: attempt.autoPoints, submittedAt: attempt.submittedAt };
   }
 
-  async listAttempts(assignmentId: string, user: JwtPrincipal) { const { assignment } = await this.teacherAssignment(assignmentId, user); return this.attempts.find({ assignmentId: assignment._id }).sort({ submittedAt: -1 }).lean(); }
+  async listAttempts(assignmentId: string, user: JwtPrincipal): Promise<TeacherAttemptListResponse> {
+    const { assignment } = await this.teacherAssignment(assignmentId, user);
+    const [attempts, enrollments] = await Promise.all([
+      this.attempts.find({ assignmentId: assignment._id }).sort({ submittedAt: -1, startedAt: -1 }).lean(),
+      this.enrollments.find({ courseId: assignment.courseId, active: true }).select("studentId").lean(),
+    ]);
+    const students = await this.users.find({ _id: { $in: enrollments.map((item) => item.studentId) } }).select("name +studentCode").sort({ name: 1 }).lean();
+    const studentsById = new Map(students.map((student) => [student._id.toString(), student]));
+    return {
+      assignment: { id: assignment.id, title: assignment.title, deadlineAt: assignment.deadlineAt },
+      students: students.map((student) => ({ id: student._id.toString(), name: student.name, studentCode: student.studentCode })),
+      attempts: attempts.map((attempt) => {
+        const student = studentsById.get(attempt.studentId.toString());
+        return { ...attempt, student: { id: attempt.studentId.toString(), name: student?.name ?? "Unknown student", studentCode: student?.studentCode } };
+      }),
+    };
+  }
   private async teacherAttempt(id: string, user: JwtPrincipal) { const attempt = await this.attempts.findById(asId(id)); if (!attempt) throw new NotFoundException(); await this.teacherAssignment(attempt.assignmentId.toString(), user); return attempt; }
-  async review(id: string, user: JwtPrincipal) { const attempt = await this.teacherAttempt(id, user); const version = await this.versions.findById(attempt.exerciseVersionId); return { attempt, version }; }
+  async review(id: string, user: JwtPrincipal) {
+    const attempt = await this.teacherAttempt(id, user);
+    const [version, student, assignment] = await Promise.all([
+      this.versions.findById(attempt.exerciseVersionId),
+      this.users.findById(attempt.studentId).select("name +studentCode").lean(),
+      this.assignments.findById(attempt.assignmentId).select("title deadlineAt").lean(),
+    ]);
+    if (!version) throw new NotFoundException("Exercise version not found");
+    return {
+      attempt,
+      version,
+      student: { id: attempt.studentId.toString(), name: student?.name ?? "Unknown student", studentCode: student?.studentCode },
+      assignment: assignment ? { id: assignment._id.toString(), title: assignment.title, deadlineAt: assignment.deadlineAt } : undefined,
+    };
+  }
   async manualGrade(id: string, manualPoints: number, user: JwtPrincipal) { const attempt = await this.teacherAttempt(id, user); if (attempt.status !== ExerciseAttemptStatus.SUBMITTED) throw new BadRequestException("Attempt has not been submitted"); const version = await this.versions.findById(attempt.exerciseVersionId); const maximum = version?.questions.filter((question) => question.type === ExerciseQuestionType.READ_ALOUD).reduce((sum, question) => sum + question.points, 0) ?? 0; if (manualPoints > maximum) throw new BadRequestException(`Manual points cannot exceed ${maximum}`); attempt.manualPoints = manualPoints; attempt.gradingStatus = ExerciseGradingStatus.READY_TO_PUBLISH; return attempt.save(); }
   async publishResult(id: string, user: JwtPrincipal) { const attempt = await this.teacherAttempt(id, user); if (attempt.gradingStatus !== ExerciseGradingStatus.READY_TO_PUBLISH) throw new BadRequestException("Finish manual grading before publishing"); attempt.gradingStatus = ExerciseGradingStatus.PUBLISHED; await attempt.save(); return { id: attempt.id, gradingStatus: attempt.gradingStatus, totalPoints: attempt.autoPoints + (attempt.manualPoints ?? 0) }; }
   async result(id: string, user: JwtPrincipal) { const attempt = await this.studentAttempt(id, user); if (attempt.gradingStatus !== ExerciseGradingStatus.PUBLISHED) return { id: attempt.id, status: attempt.status, gradingStatus: attempt.gradingStatus }; const version = await this.versions.findById(attempt.exerciseVersionId); const assignment = await this.assignments.findById(attempt.assignmentId); return { id: attempt.id, gradingStatus: attempt.gradingStatus, autoPoints: attempt.autoPoints, manualPoints: attempt.manualPoints ?? 0, totalPoints: attempt.autoPoints + (attempt.manualPoints ?? 0), questionScores: attempt.questionScores, questions: assignment?.allowAnswerReview ? version?.questions.map((question) => ({ id: question.id, answerKey: question.answerKey, explanation: question.explanation })) : undefined }; }

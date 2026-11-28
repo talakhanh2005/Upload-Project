@@ -1160,9 +1160,9 @@ export default function TeacherPage() {
                   )}
                   <div className="assignment-admin-list">
                     {assignments.map((item, index) => <article className="assignment-admin-row" key={item._id}>
-                      {item.kind === "INTERACTIVE" ? <Link className="assignment-admin-link" href={`/teacher/exercises/${item._id}`}>
-                        <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>{item.editorStatus ?? "DRAFT"} · Due {formatDate(item.deadlineAt)}</small></div><b>Edit →</b>
-                      </Link> : <button className="assignment-admin-open" onClick={() => void openReview(item)}>
+                      {item.kind === "INTERACTIVE" ? <div className="assignment-admin-interactive">
+                        <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>{item.editorStatus ?? "DRAFT"} · Due {formatDate(item.deadlineAt)}</small></div><div className="assignment-row-actions"><Link className="grade-link" href={`/teacher/exercises/${item._id}/review`}>View & grade</Link><Link href={`/teacher/exercises/${item._id}`}>Edit</Link></div>
+                      </div> : <button className="assignment-admin-open" onClick={() => void openReview(item)}>
                         <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>Due {formatDate(item.deadlineAt)}</small></div><b>Review →</b>
                       </button>}
                       <button className="assignment-delete" aria-label={`Delete ${item.title}`} title="Delete assignment" onClick={() => void deleteAssignment(item)}>×</button>

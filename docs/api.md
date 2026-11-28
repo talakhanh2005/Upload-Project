@@ -181,7 +181,7 @@ Import accepts optional YAML-style front matter followed by fenced `exercise` bl
 
 | Method | Route | Definition |
 | ------ | ----- | ---------- |
-| GET | `/assignments/:id/exercise/attempts` | List attempts for an owned assignment. |
-| GET | `/exercise-attempts/:id/review` | Read the attempt and server-only version for grading. |
+| GET | `/assignments/:id/exercise/attempts` | List the assignment, enrolled students, and attempts with student names/codes for an owned assignment. |
+| GET | `/exercise-attempts/:id/review` | Read the attempt, student identity, assignment summary, and server-only version for grading. |
 | PUT | `/exercise-attempts/:id/grading` | Set manual points and mark the result ready. |
 | POST | `/exercise-attempts/:id/feedback/publish` | Publish the result for the student. |
